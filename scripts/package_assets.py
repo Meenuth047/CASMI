@@ -13,14 +13,21 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WORK, OUT = os.path.join(ROOT, 'work'), os.path.join(ROOT, 'kaggle_assets')
 
 ap = argparse.ArgumentParser()
-ap.add_argument('--model', default=os.path.join(WORK, 'ckpt', 'model.pt'))
+default_model = os.path.join(WORK, 'ckpt', 'model_v2_best.pt')
+if not os.path.exists(default_model):
+    default_model = os.path.join(WORK, 'ckpt', 'model.pt')
+ap.add_argument('--model', default=default_model)
 ap.add_argument('--slug', default='casmi-v1-assets')
 args = ap.parse_args()
+
+vocab_path = os.path.join(WORK, 'v2', 'vocab.json')
+if not os.path.exists(vocab_path):
+    vocab_path = os.path.join(WORK, 'vocab.json')
 
 os.makedirs(OUT, exist_ok=True)
 files = {
     args.model: 'model.pt',
-    os.path.join(WORK, 'vocab.json'): 'vocab.json',
+    vocab_path: 'vocab.json',
     os.path.join(WORK, 'ranker.json'): 'ranker.json',
     os.path.join(WORK, 'structures.parquet'): 'structures.parquet',
     os.path.join(WORK, 'db', 'coconut.parquet'): 'coconut.parquet',

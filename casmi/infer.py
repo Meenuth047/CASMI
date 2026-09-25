@@ -32,10 +32,15 @@ def spectra_to_batch(spectra, device):
 
 
 class ModelScorer:
-    def __init__(self, model_path, vocab_path, device=None):
+    def __init__(self, model_path, vocab_path=None, device=None):
         self.device = torch.device(device or ('cuda' if torch.cuda.is_available() else 'cpu'))
         self.model, self.ckpt = load_model(model_path, self.device)
-        self.tokenizer = SmilesTokenizer.load(vocab_path)
+        if self.ckpt.get('cfg', {}).get('vocab'):
+            self.tokenizer = SmilesTokenizer(self.ckpt['cfg']['vocab'])
+        elif vocab_path and os.path.exists(vocab_path):
+            self.tokenizer = SmilesTokenizer.load(vocab_path)
+        else:
+            raise ValueError(f"No vocabulary found in checkpoint or at {vocab_path}")
         # bf16 only where the hardware really has it (Ampere+); a Kaggle T4 runs fp32, which is fast enough here
         self.amp = self.device.type == 'cuda' and torch.cuda.get_device_capability(self.device)[0] >= 8
         self.max_tokens = self.model.decoder.max_tokens

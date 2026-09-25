@@ -72,7 +72,8 @@ nb = {
     },
     'nbformat': 4, 'nbformat_minor': 4,
 }
-out = os.path.join(ROOT, 'casmi_v1_kaggle.ipynb')
+os.makedirs(os.path.join(ROOT, 'notebooks'), exist_ok=True)
+out = os.path.join(ROOT, 'notebooks', 'casmi_v1_kaggle.ipynb')
 with open(out, 'w') as fh:
     json.dump(nb, fh, indent=1)
 print('wrote', out, f'({len(cells)} cells)')

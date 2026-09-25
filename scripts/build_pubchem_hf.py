@@ -93,7 +93,9 @@ def chunks(stream):
 def main():
     smi_parts, mass_parts, ik_parts = [], [], []
     seen = kept = 0
-    with Pool(8, initializer=_init) as pool:
+    n_workers = int(os.environ.get("N_WORKERS", 16))
+    log(f"using {n_workers} CPU worker processes")
+    with Pool(n_workers, initializer=_init) as pool:
         for o_s, o_m, o_k in pool.imap(work, chunks(sys.stdin), chunksize=1):
             seen += CHUNK
             kept += len(o_s)
