@@ -1,0 +1,63 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env
+.venv/
+venv/
+env/
+ENV/
+bin/
+
+# Secrets and credentials
+*token*.txt
+*.key
+*.pem
+kaggle.json
+
+# Large training working directory and outputs
+work/
+output/
+kaggle_assets/
+
+# External cloned repository and build artifacts
+rdkit/
+
+# Competition data & datasets (>100MB / raw competition files)
+*.parquet
+train.parquet
+test.parquet
+sample_submission.csv
+
+# Preprocessed arrays, caches, and serializations
+*.npz
+*.npy
+*.pkl
+*.pickle
+
+# Model checkpoints and weights (exceeds GitHub 100MB limit)
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+
+# Package wheels and compressed archives
+*.whl
+*.tar.gz
+*.tar.xz
+*.zip
+
+# Logs
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
