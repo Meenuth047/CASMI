@@ -27,9 +27,9 @@ from rdkit import Chem
 DEFAULT_CFG = dict(
     ppm_tol=10.0,            # candidate retrieval window around the calibrated neutral mass
     denovo_ppm=12.0,         # a generated structure must match the precursor mass to be kept
-    denovo_samples=64,       # samples per spectrum
+    denovo_samples=128,      # samples per spectrum (V3: doubled from 64)
     denovo_temperature=1.0,
-    max_lib=200, max_coconut=150, max_pubchem=150, max_denovo=100,   # shortlist sizes sent to the decoder
+    max_lib=200, max_coconut=150, max_pubchem=350, max_denovo=100,   # shortlist sizes sent to the decoder (V3: pubchem 150→350)
     n_proc=4,
     n_out=25,
 )
