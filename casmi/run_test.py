@@ -14,7 +14,7 @@ from casmi.infer import ModelScorer
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def run(test_path, sample_submission_path, train_path, assets_dir, out_path, n_proc=4, denovo_samples=64, use_pubchem=True):
+def run(test_path, sample_submission_path, train_path, assets_dir, out_path, n_proc=4, denovo_samples=128, use_pubchem=True):
     from casmi.libsearch import SpectralLibrary
     from casmi.candidates import CandidateDB
     test = pd.read_parquet(test_path)
