@@ -3,6 +3,7 @@ Model inference helpers: raw spectra -> tensors, per-molecule fingerprint predic
 log-likelihood scoring and de novo sampling.
 """
 
+import os
 import numpy as np
 import torch
 

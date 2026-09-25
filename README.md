@@ -1,7 +1,8 @@
 # Enveda CASMI 2026 — Molecule ID From Mass Spectra
 
 [![Competition](https://img.shields.io/badge/Kaggle-Enveda%20CASMI%202026-blue)](https://www.kaggle.com/competitions/enveda-CASMI26-molecule-id-mass-spectra)
-[![Leaderboard](https://img.shields.io/badge/Public%20LB-0.207%20(V1)-green)](https://www.kaggle.com/competitions/enveda-CASMI26-molecule-id-mass-spectra/leaderboard)
+[![Leaderboard](https://img.shields.io/badge/Public%20LB-0.241%20(V2%20PB)-green)](https://www.kaggle.com/competitions/enveda-CASMI26-molecule-id-mass-spectra/leaderboard)
+[![V3 Status](https://img.shields.io/badge/V3%20Pipeline-Ready%20for%20Submission-blue)]()
 [![Metric](https://img.shields.io/badge/Metric-MRR%4025%20(InChIKey14)-orange)]()
 [![Hardware](https://img.shields.io/badge/Compute-NVIDIA%20RTX%204090-purple)]()
 
@@ -91,7 +92,9 @@ CASMI/
 │   └── CASMI_denovo_tutorial_*.md # Initial tutorial references and notes
 │
 ├── notebooks/                     # Jupyter notebooks
-│   ├── casmi_v1_kaggle.ipynb      # Standalone self-contained V1 Kaggle submission notebook
+│   ├── casmi_v3_kaggle.ipynb      # Standalone V3 notebook (PubChem 350, 128 samples, 1079-mol MLP)
+│   ├── casmi_v2_kaggle.ipynb      # V2 Kaggle submission notebook (PubChem 150, 64 samples)
+│   ├── casmi_v1_kaggle.ipynb      # Baseline V1 Kaggle submission notebook
 │   └── casmi-denovo-tutorial-*.ipynb # Initial exploratory baseline notebook
 │
 ├── kaggle_assets/                 # Files packaged for Kaggle private dataset
@@ -148,23 +151,28 @@ Run inference on `test.parquet`:
 ```
 
 ### 5. Submit to Kaggle
-1. Upload `kaggle_assets/` as a private Kaggle dataset (`casmi-v1-assets`).
-2. Open [`notebooks/casmi_v1_kaggle.ipynb`](notebooks/casmi_v1_kaggle.ipynb) in Kaggle.
+1. Upload/update `kaggle_assets/` in your private Kaggle dataset (`casmi-v1-assets`). *(For V3, only `ranker.json` needs to be updated).*
+2. Import [**`notebooks/casmi_v3_kaggle.ipynb`**](notebooks/casmi_v3_kaggle.ipynb) into a new Kaggle notebook (e.g. `casmi-v3-notebook`).
 3. Attach the competition data and your `casmi-v1-assets` dataset.
 4. Select **GPU T4**, toggle **Internet Off**, and click **Save Version → Save & Run All (Commit)**.
 5. In the Output tab, click **Submit to Competition**.
 
 ---
 
-## 📊 Experimental Results
+## 📊 Competition Submissions & Scoreboard
 
-### Held-Out Validation (Natural Products on timsTOF)
+| Version | Key Innovations | Offline Validation (c1 / c2 / c3 MRR) | Kaggle Public LB (MRR@25) | Status |
+|:---:|:---|:---:|:---:|:---:|
+| **V1** | 3-tier retrieval (Library + COCONUT 461k + De Novo Transformer); baseline linear ranker on 125 natural products | 0.900 / 0.225 / 0.059 | **0.207** | Succeeded |
+| **V2** | + 84.2M PubChem Parquet database (±10 ppm); V2 Transformer (4 randomized SMILES variants + 25% COCONUT pretrain); MLP Ranker | 0.924 / 0.225 / 0.062 | **0.241** *(+16.4%)* | New Personal Best 🏆 |
+| **V3** | Expanded PubChem shortlist (150→**350**); doubled de novo sampling (64→**128**); 5-Fold MLP-32 Ranker fitted on **all 1,079 molecules** (val_np + val_rand) | **0.864 / 0.522 / 0.132** *(+132% c2 gain!)* | `______` *(Awaiting V3 LB Result)* | Ready for Submission 🚀 |
 
-| Scenario / Class | Definition | V1 Model (COCONUT only) | V2 Expected (PubChem + Un-memorized) |
-|---|---|---|---|
-| **Class 1 (Library)** | Public spectrum exists in library | **~0.90 MRR** | **~0.92 MRR** |
-| **Class 2 (Database)** | No spectrum, but structure in DB | **~0.53 MRR** | **~0.60+ MRR** (84M PubChem coverage) |
-| **Class 3 (De Novo)** | Novel structure, generation only | **~0.18 MRR** | **~0.25+ MRR** (randomized SMILES) |
+### Cross-Validation Comparison on 1,079 Molecules (V3 Ranker)
 
-* **Kaggle Public Leaderboard (V1)**: **0.207** (using only COCONUT; confirmed 100% compliant and offline-compatible).
-* **Target (V2)**: **0.35–0.45+** by incorporating full PubChem candidate retrieval and the V2 generalized model.
+| Ranker Design | val_np c1 | val_np c2 | val_np c3 | val_rand c1 | val_rand c2 | val_rand c3 |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Fallback Hand-Weights** | 0.924 | 0.225 | 0.059 | 0.695 | 0.198 | 0.106 |
+| **Linear + Lib-Confidence** | 0.815 | 0.485 | 0.101 | 0.720 | 0.259 | 0.136 |
+| **MLP-16 + Lib-Confidence** | 0.866 | 0.558 | 0.146 | 0.728 | 0.311 | 0.154 |
+| **MLP-32 + Lib-Confidence (V3)** | **0.864** | **0.522** | **0.132** | **0.734** | **0.309** | **0.161** |
+

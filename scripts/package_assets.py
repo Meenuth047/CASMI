@@ -40,7 +40,7 @@ for src, name in files.items():
     else:
         print(f'  {name:22s} MISSING ({src})' + ('  <- optional' if name == 'pubchem.parquet' else ''))
 
-user = 'YOUR_KAGGLE_USERNAME'
+user = 'thakurmeenukumari'
 try:
     with open(os.path.expanduser('~/.kaggle/kaggle.json')) as fh:
         user = json.load(fh).get('username', user)
@@ -50,4 +50,4 @@ meta = {'title': 'CASMI V1 assets', 'id': f'{user}/{args.slug}', 'licenses': [{'
 with open(os.path.join(OUT, 'dataset-metadata.json'), 'w') as fh:
     json.dump(meta, fh, indent=1)
 print('dataset id:', meta['id'])
-subprocess.check_call([sys.executable, os.path.join(ROOT, 'scripts', 'build_kaggle_notebook.py')])
+subprocess.check_call([sys.executable, os.path.join(ROOT, 'scripts', 'build_kaggle_notebook.py'), '--version', 'v3'])
